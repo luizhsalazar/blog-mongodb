@@ -1,11 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeBlogComponent } from './home-blog/home-blog.component';
+import { ListagemBlogComponent } from './listagem-blog/listagem-blog.component';
+import { ListagemPostsComponent } from './listagem-posts/listagem-posts.component';
+import { PostComponent } from './post/post.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeBlogComponent
+    component: ListagemBlogComponent,
+  },
+  {
+    path: 'blogs/:id/posts',
+    component: ListagemPostsComponent
+  },
+  {
+    path: 'blogs/:id/posts/:post-id',
+    component: PostComponent
   }
 ];
 

@@ -1,0 +1,18 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    z-index: 4;
+}
+
+.container {
+    margin: 80px 3%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
