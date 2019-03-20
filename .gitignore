@@ -44,3 +44,11 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Node project
+
+api/node_modules
+api/build
+api/npm-debug.log
+api/.env
+api/.DS_Store

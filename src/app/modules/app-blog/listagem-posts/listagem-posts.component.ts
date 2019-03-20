@@ -2,13 +2,8 @@ import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from "src/app/shared/models/post.model";
-
-const ELEMENT_DATA: Post[] = [
-  {id: 1, title: 'Como Bolsonaro arruinou a vida de muitos', subtitle: '', content: '', date: new Date()},
-  {id: 2, title: 'Melhore o alcance de seus posts através das redes sociais', subtitle: '', content: '', date: new Date()},
-  {id: 3, title: 'Quem matou Marielle e Anderson?', subtitle: '', content: '', date: new Date()},
-  {id: 4, title: '100 dias de governo Bolsonaro', subtitle: '', content: '', date: new Date()}
-];
+import { BlogService } from '../app-blog.service';
+import { Blog } from 'src/app/shared/models/blog.model';
 
 @Component({
   selector: 'app-listagem-posts',
@@ -17,18 +12,35 @@ const ELEMENT_DATA: Post[] = [
 })
 export class ListagemPostsComponent {
 
-  public displayedColumns: string[] = ['id', 'title', 'date', 'actions'];
-  public dataSource = new MatTableDataSource(ELEMENT_DATA);
-  public currentBlogId: number = 0;
+  public displayedColumns: string[] = ['title', 'subtitle', 'date', 'actions'];
+  public dataSource: MatTableDataSource<Post>;
+  public currentBlog: Blog;
 
-  constructor(private activeRoute: ActivatedRoute) {
+  constructor(
+    private activeRoute: ActivatedRoute,
+    private blogService: BlogService) {
   }
 
   ngOnInit(): void {
     this.activeRoute.params.subscribe(params => {
-      this.currentBlogId = params['id'];
+      this.getBlogPosts(params['id']);
     })
   }
+
+  getBlogPosts(blogId: string) {
+    
+		this.blogService.getBlogPosts(blogId)
+      .subscribe((response: Post[]) => {
+        this.dataSource = new MatTableDataSource(response);
+      }
+    );
+
+    this.blogService.getBlog(blogId)
+      .subscribe((response: Blog) => {
+        this.currentBlog = response;
+      }
+    );
+	}
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
