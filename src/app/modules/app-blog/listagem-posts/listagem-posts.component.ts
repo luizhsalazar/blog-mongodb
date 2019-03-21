@@ -15,6 +15,7 @@ export class ListagemPostsComponent {
   public displayedColumns: string[] = ['title', 'subtitle', 'date', 'actions'];
   public dataSource: MatTableDataSource<Post>;
   public currentBlog: Blog = new Blog();
+  public hasData: boolean = false;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -32,6 +33,7 @@ export class ListagemPostsComponent {
 		this.blogService.getBlogPosts(blogId)
       .subscribe((response: Post[]) => {
         this.dataSource = new MatTableDataSource(response);
+        this.hasData = this.dataSource.data.length > 0;
       }
     );
 

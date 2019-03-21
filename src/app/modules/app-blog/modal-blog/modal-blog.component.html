@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Novo Blog</h1>
+<div mat-dialog-content>
+    <form [formGroup]="blogForm" (ngSubmit)="onSubmit()" id="blog-form" fxLayout="column">
+        <mat-form-field>
+            <input matInput placeholder="Título" formControlName="title">
+            <mat-error>Campo obrigatório</mat-error>
+        </mat-form-field>
+    
+        <mat-form-field>
+            <textarea matInput placeholder="Descrição" formControlName="description"></textarea>
+            <mat-error>Campo obrigatório</mat-error>
+        </mat-form-field>
+    </form>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="close()" style="margin-left: auto;">Cancelar</button>
+    <button mat-raised-button color="primary" cdkFocusInitial form="blog-form">Salvar</button>
+</div>
