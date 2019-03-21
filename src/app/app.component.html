@@ -8,11 +8,21 @@
             </span>
         </div>
         
-        <button mat-icon-button [matMenuTriggerFor]="menu" style="margin-left: auto;">
+        <div *ngIf="loggedIn" style="margin-left: auto;">
+            <span style="font-size: 16px;">Olá, {{ user.name }} </span>
+            <button  mat-icon-button [matMenuTriggerFor]="menuLogout">
+                <img src="{{ user.photoUrl }}" class="avatar">
+            </button>
+            <mat-menu #menuLogout="matMenu">
+                <button mat-menu-item (click)="signOut()">Logout</button>
+            </mat-menu>
+        </div>
+        
+        <button *ngIf="!loggedIn" mat-icon-button [matMenuTriggerFor]="menu" style="margin-left: auto;">
             <mat-icon>account_circle</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item>Login</button>
+            <button mat-menu-item (click)="signInWithGoogle()">Login</button>
         </mat-menu>
         
     </mat-toolbar-row>

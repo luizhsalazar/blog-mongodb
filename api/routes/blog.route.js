@@ -3,8 +3,39 @@ const routes = express.Router();
 
 let Blog = require('../models/Blog');
 let Post = require('../models/Post');
+let User = require('../models/User');
 
-routes.route('/').get(function (req, res) {
+// Users routes
+routes.route('/users/:email').get(function (req, res) {    
+  let email = req.params.email;
+  console.log(email);
+  
+  User.find({ email: email }, function (err, user){
+      if (err) {
+          console.log(err);
+          return;
+      }
+      
+      res.json(user);
+      console.log(user);
+  });
+});
+
+routes.route('/users/signup').post(function (req, res) {
+  let user = new User(req.body);
+  user.save()
+      .then(user => {
+          res.status(200).json({'user': 'user added successfully'});
+      })
+      .catch(err => {
+          res.status(400).send("unable to save to database");
+      });
+});
+
+// ------ End User Routes
+
+// Blog Routes
+routes.route('/blogs').get(function (req, res) {
   Blog.find(function (err, businesses){
     if(err){
       console.log(err);
@@ -15,7 +46,7 @@ routes.route('/').get(function (req, res) {
   });
 });
 
-routes.route('/:id').get(function (req, res) {
+routes.route('/blogs/:id').get(function (req, res) {
   let blog_id = req.params.id;
   
   Blog.findById(blog_id, function (err, blog){
@@ -28,7 +59,7 @@ routes.route('/:id').get(function (req, res) {
   });
 });
 
-routes.route('/:id/posts').get(function (req, res) {
+routes.route('/blogs/:id/posts').get(function (req, res) {
   let blog_id = req.params.id;
   
   Post.find({ blog_id: blog_id }, function (err, posts){
@@ -42,7 +73,7 @@ routes.route('/:id/posts').get(function (req, res) {
   });
 });
 
-routes.route('/:id/posts/:post_id').get(function (req, res) {
+routes.route('/blogs/:id/posts/:post_id').get(function (req, res) {
   let post_id = req.params.post_id;
   console.log(post_id);
 

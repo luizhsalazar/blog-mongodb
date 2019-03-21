@@ -14,7 +14,7 @@ export class ListagemPostsComponent {
 
   public displayedColumns: string[] = ['title', 'subtitle', 'date', 'actions'];
   public dataSource: MatTableDataSource<Post>;
-  public currentBlog: Blog;
+  public currentBlog: Blog = new Blog();
 
   constructor(
     private activeRoute: ActivatedRoute,

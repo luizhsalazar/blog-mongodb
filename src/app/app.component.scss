@@ -5,7 +5,7 @@
     right: 0;
     height: 60px;
     z-index: 4;
-    background-color: #8080805c;
+    background-color: #c4d2ae;
 }
 
 .container {
@@ -16,4 +16,10 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+}
+
+.avatar {
+    border-radius: 100%;
+    width: 35px;
+    margin-bottom: 10px;
 }

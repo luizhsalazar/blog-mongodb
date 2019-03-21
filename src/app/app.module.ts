@@ -9,6 +9,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule, MatMenuModule, MatButtonModule } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 
+import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
+import { GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider} from "angularx-social-login";
+
+let config = new AuthServiceConfig([
+  {
+    id: GoogleLoginProvider.PROVIDER_ID,
+    provider: new GoogleLoginProvider("541609539541-25r9n36busgobr7mnllqf6a7evruiajq.apps.googleusercontent.com")
+  }
+]);
+
+export function provideConfig() {
+  return config;
+}
+
 @NgModule({
   declarations: [
     AppComponent    
@@ -25,9 +39,16 @@ import { HttpClientModule } from '@angular/common/http';
     MatMenuModule,
     MatButtonModule,
     
-    AppBlogModule
+    AppBlogModule,
+    
+    SocialLoginModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

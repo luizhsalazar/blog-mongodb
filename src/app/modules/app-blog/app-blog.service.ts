@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
     providedIn: 'root'
 })
 export class BlogService {
-    private url = 'http://localhost:4000/blog';
+    private url = 'http://localhost:4000/blogs';
     
     constructor(private http: HttpClient) { }
     
