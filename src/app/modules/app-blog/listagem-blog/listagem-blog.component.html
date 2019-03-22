@@ -1,16 +1,20 @@
-<button mat-raised-button>
+<button *ngIf="isLogged" mat-raised-button>
     <mat-icon (click)="newBlog()">add</mat-icon>
 </button>
+
+<mat-card *ngIf="!hasData" style="background-color: #e2ef1b61; margin-top: 15px;">
+    Nenhum blog criado até o momento :(
+</mat-card>
 
 <div *ngIf="loading" style="margin-top: 15px;">
     <mat-spinner diameter="30" style="margin: auto;"></mat-spinner>
 </div>
 
-<mat-form-field *ngIf="!loading">
+<mat-form-field *ngIf="!loading && hasData">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtro">
 </mat-form-field>
 
-<table *ngIf="!loading" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table *ngIf="!loading && hasData" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
  
     <ng-container matColumnDef="title">
         <th mat-header-cell *matHeaderCellDef> Título </th>

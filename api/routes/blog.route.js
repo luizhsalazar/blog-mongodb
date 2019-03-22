@@ -84,9 +84,7 @@ routes.route('/blogs/:id/posts/:post_id').get(function (req, res) {
 });
 
 routes.route('/blogs').post(function (req, res) {
-	console.log('add blog');
 	let blog = new Blog(req.body);
-	console.log(blog);
 
 	blog.save()
 	.then(blog => {

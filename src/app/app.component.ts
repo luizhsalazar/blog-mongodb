@@ -21,7 +21,7 @@ export class AppComponent {
 	ngOnInit(): void {
 		this.authService.authState.subscribe((user) => {
 			this.user = user;
-			this.loggedIn = (user != null);
+			this.loggedIn = user != null;
 			
 			this.loggedIn && this.appService.login(user.email).subscribe((response: []) => {
 				if (response.length <= 0) {

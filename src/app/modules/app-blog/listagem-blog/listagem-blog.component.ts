@@ -3,6 +3,7 @@ import { MatTableDataSource, MatDialog } from '@angular/material';
 import { BlogService } from '../app-blog.service';
 import { Blog } from 'src/app/shared/models/blog.model';
 import { ModalBlogComponent } from '../modal-blog/modal-blog.component';
+import { AuthService } from 'angularx-social-login';
 
 @Component({
 	selector: 'app-listagem-blog',
@@ -10,26 +11,34 @@ import { ModalBlogComponent } from '../modal-blog/modal-blog.component';
 	styleUrls: ['./listagem-blog.component.scss'],
 })
 export class ListagemBlogComponent implements OnInit {
-	
+
 	public displayedColumns: string[] = ['title', 'description', 'actions'];
 	public dataSource = null;
 	public loading: boolean = false;
-	
+	public isLogged: boolean = false;
+	public hasData: boolean = false;
+
 	constructor(
 		private blogService: BlogService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private authService: AuthService
 	) {}
-		
+
 	ngOnInit(): void {
-		this.getBlogs();
-	}	
-	
+		this.authService.authState.subscribe(user =>
+			this.isLogged = user != null
+		);
+
+		this.getBlogs();		
+	}
+
 	private getBlogs() {
 		this.loading = true;
 		this.blogService.getBlogs()
 			.subscribe((response: Blog[]) => {
 				this.dataSource = new MatTableDataSource(response);
 				this.loading = false;
+				this.hasData = this.dataSource.data.length > 0;
 			}
 		);
 	}
@@ -37,13 +46,13 @@ export class ListagemBlogComponent implements OnInit {
 	applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
-	
+
 	newBlog() {
 		const dialogRef = this.dialog.open(ModalBlogComponent, {
 			width: '500px',
 			disableClose: true
 		});
-	  
+
 		dialogRef.afterClosed().subscribe(result => {
 			this.getBlogs();
 		});
@@ -54,4 +63,3 @@ export class ListagemBlogComponent implements OnInit {
 			.subscribe(() => this.getBlogs());
 	}
 }
-	
