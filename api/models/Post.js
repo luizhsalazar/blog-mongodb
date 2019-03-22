@@ -16,7 +16,14 @@ let Post = new Schema({
   },
   blog_id: {
     type: Schema.Types.ObjectId, ref: 'Blog'
-  }
+  },
+  sections: [
+    {
+      title: String,
+      subtitle: String,
+      content: String
+    }
+  ]
 },{
     collection: 'posts'
 });

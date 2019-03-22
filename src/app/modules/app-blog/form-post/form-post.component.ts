@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { BlogService } from '../app-blog.service';
 import { AuthService, SocialUser } from 'angularx-social-login';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,7 +17,8 @@ export class FormPostComponent implements OnInit {
     public isLogged: boolean = false;
     public loggedUser: SocialUser;
     public currentBlogId: string;
-    
+    public sectionList: FormArray;
+
     constructor(
         private fb: FormBuilder,
         private blogService: BlogService,
@@ -34,31 +35,61 @@ export class FormPostComponent implements OnInit {
         });
 
         this.activeRoute.params.subscribe(params => {
-            this.currentBlogId = params['id'];            
+            this.currentBlogId = params['id'];
         })
 
         this.postForm = this.fb.group({
             title: ["", Validators.required],
             subtitle: "",
-            rootContent: ["", Validators.required]
+            rootContent: ["", Validators.required],
+            sections: this.fb.array([this.createSection()])
         });
+
+        this.sectionList = this.postForm.get('sections') as FormArray;
+    }
+
+    get sectionFormGroup() {
+        return this.postForm.get('sections') as FormArray;
+    }
+
+    createSection(): FormGroup {
+        return this.fb.group({
+            title: ["", Validators.required],
+            subtitle: "",
+            content: ["", Validators.required]
+        });
+    }
+
+    addSection() {
+        this.sectionList.push(this.createSection());
+    }
+
+    removeSection(index) {
+        this.sectionList.removeAt(index);
     }
 
     onSubmit() {
         if (this.isLogged && this.postForm.valid) {
 
-            const post : Post = {
+            let post : Post = {
                 title: this.postForm.value['title'],
                 subtitle: this.postForm.value['subtitle'],
                 root_content: this.postForm.value['rootContent'],
                 date: new Date(Date.now()),
-                blog_id: this.currentBlogId
+                blog_id: this.currentBlogId,
+                sections: []
+            };
+
+            if (this.postForm.controls['sections'].value.length > 0) {
+                this.postForm.controls['sections'].value.forEach(section => {
+                    post.sections.push(section);
+                });
             }
 
             this.blogService.addPost(this.currentBlogId, post)
-                .subscribe((response: Post) => {
-                    this.router.navigateByUrl(`blogs/${this.currentBlogId}/posts/${response._id}`);
-                });
+            .subscribe((response: Post) => {
+                this.router.navigateByUrl(`blogs/${this.currentBlogId}/posts/${response._id}`);
+            });
         }
     }
 
