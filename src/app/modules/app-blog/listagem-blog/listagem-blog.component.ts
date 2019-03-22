@@ -3,7 +3,7 @@ import { MatTableDataSource, MatDialog } from '@angular/material';
 import { BlogService } from '../app-blog.service';
 import { Blog } from 'src/app/shared/models/blog.model';
 import { ModalBlogComponent } from '../modal-blog/modal-blog.component';
-import { AuthService } from 'angularx-social-login';
+import { AuthService, SocialUser } from 'angularx-social-login';
 
 @Component({
 	selector: 'app-listagem-blog',
@@ -12,11 +12,12 @@ import { AuthService } from 'angularx-social-login';
 })
 export class ListagemBlogComponent implements OnInit {
 
-	public displayedColumns: string[] = ['title', 'description', 'actions'];
+	public displayedColumns: string[] = ['title', 'description', 'created_by', 'actions'];
 	public dataSource = null;
 	public loading: boolean = false;
 	public isLogged: boolean = false;
 	public hasData: boolean = false;
+	public currentUser: SocialUser;
 
 	constructor(
 		private blogService: BlogService,
@@ -25,9 +26,10 @@ export class ListagemBlogComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.authService.authState.subscribe(user =>
-			this.isLogged = user != null
-		);
+		this.authService.authState.subscribe(user => {
+			this.isLogged = user != null;
+			this.currentUser = user;
+		});
 
 		this.getBlogs();		
 	}

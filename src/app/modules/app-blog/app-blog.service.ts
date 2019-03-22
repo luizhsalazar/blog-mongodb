@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Blog } from 'src/app/shared/models/blog.model';
+import { Post } from 'src/app/shared/models/post.model';
 
 @Injectable({
     providedIn: 'root'
@@ -32,5 +33,13 @@ export class BlogService {
 
     deleteBlog(blogId: string) {
         return this.http.delete(`${this.url}/${blogId}`);
+    }
+
+    deletePost(blogId: string, postId: string) {
+        return this.http.delete(`${this.url}/${blogId}/posts/${postId}`);
+    }
+
+    addPost(blogId: string, post: Post) {
+        return this.http.post(`${this.url}/${blogId}/new-post`, post);
     }
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Post } from 'src/app/shared/models/post.model';
 import { BlogService } from '../app-blog.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-post',
@@ -11,21 +12,11 @@ import { BlogService } from '../app-blog.service';
 export class PostComponent {
 
   public currentPost: Post = new Post();
-
-  // public currentPost: Post = {
-  //   _id: '15616516516',
-  //   blog_id: '15616516516',
-  //   title: 'Quem matou Marielle e Anderson?',
-  //   subtitle: 'O caso que chocou e o Brasil e continua sendo mistério após 1 ano',
-  //   content: 'The Shiba Inu is the smallest of the six original and distinct spitz breeds' + 
-  //           'of dog from Japan. A small, agile dog that copes very well with mountainous terrain,' + 
-  //           'the Shiba Inu was originally bred for hunting.',
-  //   date: new Date()
-  // };
   
   constructor(
     private activeRoute: ActivatedRoute,
-    private blogService: BlogService
+    private blogService: BlogService,
+    private _location: Location
   ) {}
   
   ngOnInit(): void {
@@ -40,5 +31,9 @@ export class PostComponent {
         this.currentPost = response;
       }
     )
+  }
+
+  backClicked() {
+    this._location.back();
   }
 }

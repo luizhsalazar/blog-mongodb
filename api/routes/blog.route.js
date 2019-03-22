@@ -95,6 +95,18 @@ routes.route('/blogs').post(function (req, res) {
 	});
 });
 
+routes.route('/blogs/:id/new-post').post(function (req, res) {
+	let post = new Post(req.body);
+
+	post.save()
+	.then(post => {
+		res.status(200).json(post);
+	})
+	.catch(err => {
+		res.status(400).send("unable to save to database");
+	});
+});
+
 // // Defined edit route
 // routes.route('/edit/:id').get(function (req, res) {
 //   let id = req.params.id;
@@ -123,8 +135,19 @@ routes.route('/blogs').post(function (req, res) {
 // });
 
 routes.route('/blogs/:id').delete(function (req, res) {
-	console.log('id remove:' + req.params.id);
-	Blog.findOneAndDelete({_id: req.params.id}, function(err, blog){
+	Blog.findOneAndDelete({_id: req.params.id}, function(err){
+		if (err) {
+			res.json(err);
+		} else {
+			res.json('Successfully removed');
+		}
+	});
+});
+
+routes.route('/blogs/:id/posts/:post_id').delete(function (req, res) {
+	console.log('remove post');
+
+	Post.findOneAndDelete({_id: req.params.post_id}, function(err){
 		if (err) {
 			res.json(err);
 		} else {

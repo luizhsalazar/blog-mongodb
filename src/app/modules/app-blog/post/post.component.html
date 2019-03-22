@@ -1,14 +1,19 @@
-<mat-card class="example-card">
+<button mat-button
+    (click)="backClicked()">
+    <mat-icon>keyboard_backspace</mat-icon>
+</button>
+
+<mat-card style="margin-top: 15px;">
     <mat-card-header>
         <mat-card-title>{{ currentPost.title }}</mat-card-title>
-        <mat-card-subtitle>{{ currentPost.subtitle }}</mat-card-subtitle>
+        <mat-card-subtitle *ngIf="currentPost.subtitle">{{ currentPost.subtitle }}</mat-card-subtitle>
     </mat-card-header>
 
     <mat-divider></mat-divider>
 
     <mat-card-content>
         <p>
-            {{ currentPost.content }}
+            {{ currentPost.root_content }}
         </p>
     </mat-card-content>
 </mat-card>

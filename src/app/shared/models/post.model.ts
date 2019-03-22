@@ -1,8 +1,8 @@
 export class Post {
-    _id: string;
+    _id?: string;
     title: string;
     subtitle: string;
-    content: string;
+    root_content: string;
     date: Date;
     blog_id: string;
 }

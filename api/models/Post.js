@@ -8,10 +8,7 @@ let Post = new Schema({
   subtitle: {
     type: String
   },
-  content: {
-    type: String
-  },
-  content: {
+  root_content: {
     type: String
   },
   date: {

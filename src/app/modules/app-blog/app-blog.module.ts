@@ -13,13 +13,15 @@ import { ModalBlogComponent } from './modal-blog/modal-blog.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormPostComponent } from './form-post/form-post.component';
 
 @NgModule({
   declarations: [
     ListagemBlogComponent,
     ListagemPostsComponent,
     PostComponent,
-    ModalBlogComponent
+    ModalBlogComponent,
+    FormPostComponent
   ],
   imports: [
     CommonModule,
