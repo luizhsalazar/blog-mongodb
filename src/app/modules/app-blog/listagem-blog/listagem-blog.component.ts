@@ -12,7 +12,7 @@ import { AuthService, SocialUser } from 'angularx-social-login';
 })
 export class ListagemBlogComponent implements OnInit {
 
-	public displayedColumns: string[] = ['title', 'description', 'author', 'actions'];
+	public displayedColumns: string[] = ['title', 'description', 'author', 'date', 'actions'];
 	public dataSource = null;
 	public loading: boolean = false;
 	public isLogged: boolean = false;

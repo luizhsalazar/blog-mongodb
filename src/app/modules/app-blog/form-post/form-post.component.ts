@@ -17,7 +17,7 @@ export class FormPostComponent implements OnInit {
     public isLogged: boolean = false;
     public loggedUser: SocialUser;
     public currentBlogId: string;
-    public sectionList: FormArray;
+    public formBuilt: boolean = false;
 
     constructor(
         private fb: FormBuilder,
@@ -42,33 +42,58 @@ export class FormPostComponent implements OnInit {
             title: ["", Validators.required],
             subtitle: "",
             rootContent: ["", Validators.required],
-            sections: this.fb.array([this.createSection()])
+            sections: this.fb.array([
+                this.createSection()
+            ])
         });
-
-        this.sectionList = this.postForm.get('sections') as FormArray;
-    }
-
-    get sectionFormGroup() {
-        return this.postForm.get('sections') as FormArray;
     }
 
     createSection(): FormGroup {
         return this.fb.group({
             title: ["", Validators.required],
             subtitle: "",
-            content: ["", Validators.required]
+            content: ["", Validators.required],
+            subSections: this.fb.array([
+                this.createSubSection()
+            ])
         });
     }
 
-    addSection() {
-        this.sectionList.push(this.createSection());
+    createSubSection(): FormGroup {
+        const formSubSection = this.fb.group({
+            title: ["", Validators.required],
+            subtitle: "",
+            content: ["", Validators.required]            
+        });        
+
+        this.formBuilt = true;
+        return formSubSection;
     }
 
-    removeSection(index) {
-        this.sectionList.removeAt(index);
+    addSection() {
+        const control = <FormArray>this.postForm.controls['sections'];
+        control.push(this.createSection());
+    }
+
+    addSubSection(sectionId: number) {
+        const control = (<FormArray>this.postForm.controls['sections'])
+                            .at(sectionId).get('subSections') as FormArray;
+        control.push(this.createSubSection());
+    }
+
+    removeSection(index: number) {
+        const control = <FormArray>this.postForm.controls['sections'];
+        control.removeAt(index);
+    }
+
+    removeSubSection(subSectionId: number) {
+        const controlSections = <FormArray>this.postForm.controls.sections;
+        const subSections = controlSections.controls.map(c => <FormArray>c.get('subSections'));
+        subSections.forEach(s => s.removeAt(subSectionId));
     }
 
     onSubmit() {
+
         if (this.isLogged && this.postForm.valid) {
 
             let post : Post = {

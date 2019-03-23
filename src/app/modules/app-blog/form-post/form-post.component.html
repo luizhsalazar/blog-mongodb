@@ -1,9 +1,12 @@
-<button mat-button
-(click)="backClicked()">
-<mat-icon>keyboard_backspace</mat-icon>
+<button mat-button (click)="backClicked()">
+    <mat-icon>keyboard_backspace</mat-icon>
 </button>
 
-<form [formGroup]="postForm" (ngSubmit)="onSubmit()" fxLayout="column">
+<div *ngIf="!formBuilt" style="margin-top: 15px;">
+    <mat-spinner diameter="30" style="margin: auto;"></mat-spinner>
+</div>
+
+<form *ngIf="formBuilt" [formGroup]="postForm" (ngSubmit)="onSubmit()" fxLayout="column">
     <mat-form-field>
         <input matInput placeholder="Título" formControlName="title">
         <mat-error>Campo obrigatório</mat-error>
@@ -19,7 +22,7 @@
     </mat-form-field>
     
     <div formArrayName="sections">
-        <mat-card *ngFor="let section of sectionFormGroup.controls; let i = index;" style="margin-top: 15px;">
+        <mat-card *ngFor="let section of postForm['controls'].sections['controls']; let i = index;" style="margin-top: 15px;">
             <mat-card-title>Seção {{ i+1 }}</mat-card-title>
             <mat-card-content [formGroupName]="i" fxLayout="column">
                 <div fxLayout="row" fxLayoutGap="5px">
@@ -38,10 +41,39 @@
                     <mat-error>Campo obrigatório</mat-error>
                 </mat-form-field>
                 
+                <div formArrayName="subSections">
+                    <mat-card *ngFor="let subsection of section['controls'].subSections['controls']; let j = index;" style="margin-top: 15px;">
+                        
+                        <mat-card-title>Subseção {{ j+1 }}</mat-card-title>
+                        <mat-card-content [formGroupName]="j" fxLayout="column">
+                            <div fxLayout="row" fxLayoutGap="5px">
+                                <mat-form-field fxFlex="50">
+                                    <input matInput placeholder="Título" formControlName="title">
+                                    <mat-error>Campo obrigatório</mat-error>
+                                </mat-form-field>
+                                
+                                <mat-form-field fxFlex="50">
+                                    <input matInput placeholder="Subtítulo" formControlName="subtitle">
+                                </mat-form-field>
+                            </div>
+                            
+                            <mat-form-field>
+                                <textarea matInput placeholder="Conteúdo" formControlName="content"></textarea>
+                                <mat-error>Campo obrigatório</mat-error>
+                            </mat-form-field>
+                            
+                        </mat-card-content>
+                        
+                        <div style="margin-left: auto">
+                            <button mat-raised-button (click)="removeSubSection(j)" color="warn">Remover Subseção</button>
+                        </div>
+                    </mat-card>
+                </div>
             </mat-card-content>
             
             <div style="margin-left: auto">
-                <button mat-raised-button (click)="removeSection(i)">Remover Seção</button>
+                <button mat-raised-button (click)="removeSection(i)" style="margin-right: 10px;">Remover Seção</button>
+                <button mat-raised-button (click)="addSubSection(i)">Nova SubSeção</button>
             </div>
             
         </mat-card>

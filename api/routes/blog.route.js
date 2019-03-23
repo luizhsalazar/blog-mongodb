@@ -9,13 +9,13 @@ let User = require('../models/User');
 routes.route('/users/:email').get(function (req, res) {
 	let email = req.params.email;
 	console.log(email);
-
+	
 	User.find({ email: email }, function (err, user){
 		if (err) {
 			console.log(err);
 			return;
 		}
-
+		
 		res.json(user);
 		console.log(user);
 	});
@@ -36,38 +36,44 @@ routes.route('/users/signup').post(function (req, res) {
 
 // Blog Routes
 routes.route('/blogs').get(function (req, res) {
-	Blog.find(function (err, businesses){
-		if(err){
-			console.log(err);
+	Blog.aggregate([{
+		$lookup: {
+			from: "posts",
+			localField: "_id",
+			foreignField: "blog_id",
+			as: "posts"
 		}
-		else {
-			res.json(businesses);
+	}]).sort({'posts.date': -1}).exec(function(err, blogPosts) {
+		if (err) {
+			console.log(err);
+		} else {
+			res.json(blogPosts);
 		}
 	});
 });
 
 routes.route('/blogs/:id').get(function (req, res) {
 	let blog_id = req.params.id;
-
+	
 	Blog.findById(blog_id, function (err, blog){
 		if (err) {
 			console.log(err);
 			return;
 		}
-
+		
 		res.json(blog);
 	});
 });
 
 routes.route('/blogs/:id/posts').get(function (req, res) {
 	let blog_id = req.params.id;
-
-	Post.find({ blog_id: blog_id }, function (err, posts){
+	
+	Post.find({ blog_id: blog_id }).sort({'date': -1}).exec(function (err, posts){
 		if (err) {
 			console.log(err);
 			return;
 		}
-
+		
 		res.json(posts);
 		console.log(posts);
 	});
@@ -76,7 +82,7 @@ routes.route('/blogs/:id/posts').get(function (req, res) {
 routes.route('/blogs/:id/posts/:post_id').get(function (req, res) {
 	let post_id = req.params.post_id;
 	console.log(post_id);
-
+	
 	Post.findById(post_id, function (err, post){
 		res.json(post);
 		console.log(post);
@@ -85,7 +91,7 @@ routes.route('/blogs/:id/posts/:post_id').get(function (req, res) {
 
 routes.route('/blogs').post(function (req, res) {
 	let blog = new Blog(req.body);
-
+	
 	blog.save()
 	.then(blog => {
 		res.status(200).json({'blog': 'blog in added successfully'});
@@ -97,7 +103,7 @@ routes.route('/blogs').post(function (req, res) {
 
 routes.route('/blogs/:id/new-post').post(function (req, res) {
 	let post = new Post(req.body);
-
+	
 	post.save()
 	.then(post => {
 		res.status(200).json(post);
@@ -106,33 +112,6 @@ routes.route('/blogs/:id/new-post').post(function (req, res) {
 		res.status(400).send("unable to save to database");
 	});
 });
-
-// // Defined edit route
-// routes.route('/edit/:id').get(function (req, res) {
-//   let id = req.params.id;
-//   Blog.findById(id, function (err, blog){
-//     res.json(blog);
-//   });
-// });
-
-// //  Defined update route
-// routes.route('/update/:id').post(function (req, res) {
-//   Blog.findById(req.params.id, function(err, blog) {
-//     if (!blog)
-//     return next(new Error('Could not load Document'));
-//     else {
-//       blog.title = req.title;
-//       blog.description = req.body.description;
-
-//       blog.save().then(blog => {
-//         res.json('Update complete');
-//       })
-//       .catch(err => {
-//         res.status(400).send("unable to update the database");
-//       });
-//     }
-//   });
-// });
 
 routes.route('/blogs/:id').delete(function (req, res) {
 	Blog.findOneAndDelete({_id: req.params.id}, function(err){
@@ -146,7 +125,7 @@ routes.route('/blogs/:id').delete(function (req, res) {
 
 routes.route('/blogs/:id/posts/:post_id').delete(function (req, res) {
 	console.log('remove post');
-
+	
 	Post.findOneAndDelete({_id: req.params.post_id}, function(err){
 		if (err) {
 			res.json(err);
